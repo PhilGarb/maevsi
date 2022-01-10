@@ -46,6 +46,20 @@ export default defineNuxtConfig({
       },
     },
     extractCSS: true,
+    optimization: {
+      runtimeChunk: true,
+      splitChunks: {
+        name: true,
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /.(css|vue)$/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      },
+    },
     postcss: { plugins: { tailwindcss: {}, autoprefixer: {} } },
     transpile: [
       '@http-util/status-i18n',

@@ -5,6 +5,10 @@ nuxt.d.ts
 .output
 .env
 
+# Cypress
+cypress/downloads
+cypress/videos
+
 # Storybook
 .nuxt-storybook
 storybook-static
