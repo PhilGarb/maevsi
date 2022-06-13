@@ -3,6 +3,11 @@ import consola from 'consola'
 
 export default ({ store }: Context) => {
   return {
+    httpLinkOptions: {
+      headers: {
+        'X-AUTHENTICATE': '123',
+      },
+    },
     httpEndpoint: process.server
       ? 'http://postgraphile:5000/graphql'
       : 'https://postgraphile.' +
