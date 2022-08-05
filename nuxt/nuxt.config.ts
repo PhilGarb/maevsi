@@ -370,7 +370,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/apollo.ts',
     '~/plugins/baseUrl.ts',
-    '~/plugins/croppa.js',
     '~/plugins/domPurify.ts',
     '~/plugins/htmlToText.ts',
     '~/plugins/i18n.ts',

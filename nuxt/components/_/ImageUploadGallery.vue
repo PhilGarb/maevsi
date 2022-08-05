@@ -118,16 +118,7 @@
       :submit-name="$t('upload')"
       :submit-task-provider="() => getUploadBlobPromise()"
     >
-      <div class="text-center">
-        <croppa
-          ref="croppy"
-          :initial-image="fileSelectedUrl"
-          :placeholder="$t('croppaPlaceholder')"
-          :placeholder-font-size="17.5"
-          prevent-white-space
-          :show-remove-button="false"
-        />
-      </div>
+      <Cropper ref="croppy" :src="fileSelectedUrl" />
       <template slot="header">{{ $t('uploadNew') }}</template>
       <template slot="submit-icon"><IconUpload /></template>
     </Modal>
@@ -138,6 +129,7 @@
 import { Uppy, UploadResult, UppyFile } from '@uppy/core'
 import Tus from '@uppy/tus'
 import consola from 'consola'
+import { Cropper } from 'vue-advanced-cropper'
 import prettyBytes from 'pretty-bytes'
 import Swal from 'sweetalert2'
 import { mapGetters } from 'vuex'
@@ -170,6 +162,9 @@ export default defineComponent({
         },
       }
     },
+  },
+  components: {
+    Cropper,
   },
   props: {
     allowAddition: {
@@ -405,13 +400,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import '~/node_modules/vue-croppa/dist/vue-croppa.min.css';
+@import '~/node_modules/vue-advanced-cropper/dist/style.css';
 </style>
 
 <i18n lang="yml">
 de:
   cancel: Abbrechen
-  croppaPlaceholder: Wähle ein Bild
+  cropperPlaceholder: Wähle ein Bild
   iconAdd: 'Ein neues Bild hochladen. Genutzter Speicherplatz: {sizeUsed}/{sizeTotal}.'
   iconTrash: löschen
   iconTrashLabel: Dieses hochgeladene Bild löschen.
@@ -428,7 +423,7 @@ de:
   uploadSize: 'Größe: {size}'
 en:
   cancel: Cancel
-  croppaPlaceholder: Choose an image
+  cropperPlaceholder: Choose an image
   iconAdd: 'Upload a new image. Used storage space: {sizeUsed}/{sizeTotal}.'
   iconTrash: trash
   iconTrashLabel: Delete this uploaded image.
