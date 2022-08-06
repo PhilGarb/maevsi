@@ -43,9 +43,11 @@
             }"
             :disabled="isDisabled"
             :placeholder="placeholder"
+            :readonly="isReadonly"
             :type="type"
-            :value="value.$model"
+            :value="valueFormatter(value.$model)"
             @input="$emit('input', $event.target.value)"
+            @click="$emit('click')"
           />
           <div v-if="validationProperty && isValidatable">
             <FormInputIconWrapper v-if="validationProperty.$pending">
@@ -76,7 +78,7 @@
         <span
           v-if="$slots.icon"
           class="inline-flex cursor-pointer items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500"
-          @click="$emit('click')"
+          @click="$emit('delete')"
         >
           <slot name="icon" />
         </span>
@@ -118,6 +120,10 @@ const FormInput = defineComponent({
       default: false,
       type: Boolean,
     },
+    isReadonly: {
+      default: false,
+      type: Boolean,
+    },
     isRequired: {
       default: false,
       type: Boolean,
@@ -153,6 +159,10 @@ const FormInput = defineComponent({
     value: {
       default: undefined,
       type: Object as PropType<object | undefined>,
+    },
+    valueFormatter: {
+      default: (x: Object) => x,
+      type: Function as PropType<Function | undefined>,
     },
     warning: {
       default: false,

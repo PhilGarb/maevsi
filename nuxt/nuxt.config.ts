@@ -138,7 +138,7 @@ export default defineNuxtConfig({
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ['@/assets/css/main.css', 'vue-datetime/dist/vue-datetime.min.css'],
+  css: ['@/assets/css/main.css'],
 
   dir: {
     static: 'public',
@@ -390,6 +390,7 @@ export default defineNuxtConfig({
     '~/plugins/i18n.ts',
     '~/plugins/slugify.ts',
     '~/plugins/util.ts',
+    { src: '~/plugins/vCalendar.ts', mode: 'client' },
     '~/plugins/vuelidate.ts',
   ],
 

@@ -120,21 +120,16 @@
     </FormInput>
     <FormInput
       id-label="input-start"
+      is-readonly
       is-required
       :title="$t('start')"
-      type="datetime-local"
+      type="text"
       :value="$v.form.start"
+      :value-formatter="(x) => (x ? $moment(x).format('LLL') : undefined)"
       :warning="!$util.VALIDATION_NOW_OR_FUTURE($moment($v.form.start.$model))"
       @input="form.start = $event"
+      @click="$store.commit('modalAdd', { id: 'ModalDateTimeStart' })"
     >
-      <Datetime
-        v-model="$v.form.start.$model"
-        input-class="form-input"
-        input-id="input-start"
-        :max-datetime="$v.form.end.$model"
-        :minute-step="5"
-        type="datetime"
-      />
       <template slot="stateWarning">
         <FormInputStateWarning
           v-if="!$util.VALIDATION_NOW_OR_FUTURE($moment($v.form.start.$model))"
@@ -145,23 +140,15 @@
     </FormInput>
     <FormInput
       id-label="input-end"
+      is-readonly
       :title="$t('end')"
-      type="datetime-local"
+      type="text"
       :value="$v.form.end"
+      :value-formatter="(x) => (x ? $moment(x).format('LLL') : undefined)"
       @input="form.end = $event"
-      @click="$v.form.end.$model = undefined"
+      @delete="$v.form.end.$model = undefined"
+      @click="$store.commit('modalAdd', { id: 'ModalDateTimeEnd' })"
     >
-      <Datetime
-        v-model="$v.form.end.$model"
-        :input-class="[
-          'form-input',
-          ...(!!$v.form.end.$model ? ['rounded-r-none'] : []),
-        ]"
-        input-id="input-end"
-        :min-datetime="$v.form.start.$model"
-        :minute-step="5"
-        type="datetime"
-      />
       <template v-if="!!$v.form.end.$model" slot="icon">
         <IconX />
       </template>
@@ -253,12 +240,52 @@
         </FormInputStateError>
       </template>
     </FormInput>
+    <Modal id="ModalDateTimeStart">
+      <client-only>
+        <div class="flex justify-center">
+          <v-date-picker
+            v-model="$v.form.start.$model"
+            input-class="form-input"
+            input-id="input-start"
+            :is24hr="$i18n.locale !== 'en'"
+            :locale="$i18n.locale"
+            :minute-increment="5"
+            mode="dateTime"
+            :masks="{ input: 'YYYY-MM-DD h:mm A' }"
+            color="red"
+            is-dark
+          />
+        </div>
+      </client-only>
+      <!-- :max-datetime="$v.form.end.$model" -->
+    </Modal>
+    <Modal id="ModalDateTimeEnd">
+      <client-only>
+        <div class="flex justify-center">
+          <v-date-picker
+            v-model="$v.form.end.$model"
+            :input-class="[
+              'form-input',
+              ...(!!$v.form.end.$model ? ['rounded-r-none'] : []),
+            ]"
+            input-id="input-end"
+            :is24hr="$i18n.locale !== 'en'"
+            :locale="$i18n.locale"
+            :minute-increment="5"
+            mode="dateTime"
+            :masks="{ input: 'YYYY-MM-DD h:mm A' }"
+            color="red"
+            is-dark
+          />
+        </div>
+      </client-only>
+      <!-- :min-datetime="$v.form.start.$model" -->
+    </Modal>
   </Form>
 </template>
 
 <script lang="ts">
 import consola from 'consola'
-import { Datetime } from 'vue-datetime'
 import {
   maxLength,
   maxValue,
@@ -273,9 +300,6 @@ import EVENT_UPDATE_BY_ID_MUTATION from '~/gql/mutation/event/eventUpdateById.gq
 import { Event, Visibility } from '~/types/event'
 
 export default defineComponent({
-  components: {
-    Datetime,
-  },
   props: {
     event: {
       default: undefined,
@@ -296,9 +320,7 @@ export default defineComponent({
         location: undefined as string | undefined,
         name: undefined as string | undefined,
         slug: undefined as string | undefined,
-        start: new Date(
-          new Date().getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(), // Must be initialized, otherwise yields an error instantly: https://github.com/mariomka/vue-datetime/issues/177
+        start: undefined as Date | undefined,
         url: undefined as string | undefined,
         visibility: undefined as Visibility | undefined,
       },
