@@ -3,7 +3,7 @@
     v-if="($apollo.loading && !event) || graphqlError"
     :errors="$util.getGqlErrorMessages(graphqlError, this)"
   />
-  <div v-else class="flex flex-col gap-4">
+  <div v-else-if="event" class="flex flex-col gap-4">
     <Breadcrumbs
       :prefixes="[
         { name: $t('events'), to: '../..', append: true },
@@ -373,6 +373,9 @@ export default defineComponent({
   head() {
     const title = this.title as string
     const event = this.event as MaevsiEvent
+
+    if (!event) return {}
+
     return {
       meta: [
         {
@@ -456,7 +459,11 @@ export default defineComponent({
       return undefined
     },
     title(): string | undefined {
-      return this.event.name
+      if (this.event) {
+        return this.event.name
+      }
+
+      return undefined
     },
   },
   methods: {
